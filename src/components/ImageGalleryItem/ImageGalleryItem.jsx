@@ -3,10 +3,10 @@ import {
   ImageGalleryItemImg,
 } from './ImageGalleryItem.styled'
 
-export default function ImageGalleryItem() {
+export default function ImageGalleryItem({ src }) {
   return (
-    <ImageGalleryItem>
-      <ImageGalleryItemImg />
-    </ImageGalleryItem>
+    <ImageGalleryListItem>
+      <ImageGalleryItemImg src={src} width="300px" />
+    </ImageGalleryListItem>
   )
 }

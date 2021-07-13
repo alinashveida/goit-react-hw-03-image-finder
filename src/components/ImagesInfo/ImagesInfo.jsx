@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import ImageGallery from '../ImageGallery/ImageGallery'
-import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem'
+// import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem'
 
 export default class ImagesInfo extends Component {
   state = {
@@ -32,9 +32,17 @@ export default class ImagesInfo extends Component {
         {loading && <p>Loading</p>}
         {!imageName && <p>Введите</p>}
         {image && (
-          <ImageGallery>
-            <ImageGalleryItem></ImageGalleryItem>
-          </ImageGallery>
+          <ImageGallery images={this.state.image}/>
+      
+          // <ul>
+          //   {' '}
+          //   {image.map((image) => (
+          //     // <li key={image.id} >
+          //       <img  src={image.webformatURL} width="240px" />
+          //       // </li>
+          //   ))}
+          // </ul>
+
         )}
       </>
     )
