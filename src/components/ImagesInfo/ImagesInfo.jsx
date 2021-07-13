@@ -1,50 +1,93 @@
 import React, { Component } from 'react'
 import ImageGallery from '../ImageGallery/ImageGallery'
-// import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem'
+import { onError } from '../../NotifyError'
+import Spinner from '../Spinner/Spinner'
+import { ImagesInfoText } from './ImagesInfo.styled'
+import { fetchImages } from '../../services/Api'
+import Button from '../Button/Button'
 
 export default class ImagesInfo extends Component {
   state = {
     image: null,
-    loading: false,
+    error: null,
+    page: 1,
+    status: 'idle',
   }
+
   componentDidUpdate(prevProps, prevState) {
     const nextName = this.props.imageName
-    if (prevProps.imageName !== nextName) {
-      console.log('1')
+    const prevName = prevProps.imageName
 
-      this.setState({ loading: true })
-      fetch(`https://pixabay.com/api/?q=${nextName}&page=1&key=21785158-d7699e1d635f5d39ae805dbbd&image_type=photo&orientation=horizontal&per_page=12
-      `)
-        .then((responce) => responce.json())
+    const nextPage = this.state.page
+    const prevPage = prevState.page
+
+    if (prevName !== nextName) {
+      this.setState({ status: 'pending' })
+
+      this.resetPage()
+
+      fetchImages(nextName, nextPage)
         .then((data) => {
-          this.setState({ image: data.hits })
+          this.setState({ image: data.hits, status: 'resolved' })
+          if (this.state.image.length === 0) {
+            onError('Ваш запрос не дал результата')
+          }
         })
-        .finally(() => this.setState({ loading: false }))
+        .catch((error) => this.setState({ error: true, status: 'rejected' }))
+    }
+
+    if (prevPage !== nextPage) {
+      fetchImages(nextName, nextPage)
+        .then((data) => {
+          this.setState({ status: 'resolved' })
+          this.setState((prevState) => {
+            return { image: [...prevState.image, ...data.hits] }
+          })
+        })
+        .catch((error) => this.setState({ error: true, status: 'rejected' }))
     }
   }
 
+  onButtonLoadMore = (event) => {
+    this.setState((prevState) => {
+      return { page: prevState.page + 1 }
+    })
+  }
+
+  resetPage = () => {
+    this.setState({
+      page: 1,
+    })
+  }
+
   render() {
-    const { loading, image } = this.state
-    const { imageName } = this.props
+    const { image, error, status } = this.state
+    const { imageName, onImageClick } = this.props
 
-    return (
-      <>
-        {loading && <p>Loading</p>}
-        {!imageName && <p>Введите</p>}
-        {image && (
-          <ImageGallery images={this.state.image}/>
-      
-          // <ul>
-          //   {' '}
-          //   {image.map((image) => (
-          //     // <li key={image.id} >
-          //       <img  src={image.webformatURL} width="240px" />
-          //       // </li>
-          //   ))}
-          // </ul>
-
-        )}
-      </>
-    )
+    if (status === 'idle') {
+      return <ImagesInfoText>Введите ваш запрос</ImagesInfoText>
+    }
+    if (status === 'pending') {
+      return (
+        <>
+          <Spinner />
+        </>
+      )
+    }
+    if (status === 'rejected') {
+      return <>{error.message}</>
+    }
+    if (status === 'resolved') {
+      return (
+        <>
+          <ImageGallery
+            images={image}
+            imageName={imageName}
+            onImageClick={onImageClick}
+          />
+          <Button onClick={this.onButtonLoadMore}></Button>
+        </>
+      )
+    }
   }
 }

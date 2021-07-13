@@ -3,10 +3,19 @@ import {
   ImageGalleryItemImg,
 } from './ImageGalleryItem.styled'
 
-export default function ImageGalleryItem({ src }) {
+export default function ImageGalleryItem({
+  src,
+  imageName,
+  onImageClick,
+  largeImageURL,
+}) {
   return (
     <ImageGalleryListItem>
-      <ImageGalleryItemImg src={src} width="300px" />
+      <ImageGalleryItemImg
+        src={src}
+        alt={imageName}
+        onClick={() => onImageClick(largeImageURL)}
+      />
     </ImageGalleryListItem>
   )
 }

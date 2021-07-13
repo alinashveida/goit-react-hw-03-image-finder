@@ -6,7 +6,7 @@ import {
   SearchFormInput,
 } from './Searchbar.styled'
 import React, { Component } from 'react'
-import { toast } from 'react-toastify'
+import { onError } from '../../NotifyError'
 
 export default class Searchbar extends Component {
   state = {
@@ -25,15 +25,7 @@ export default class Searchbar extends Component {
 
     if (this.state.imageName.trim() === '') {
       console.log('Ведите имя покемона')
-      toast('Wow so easy!', {
-        position: 'top-right',
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      })
+      onError('Введите текст')
       return
     }
 
@@ -55,6 +47,7 @@ export default class Searchbar extends Component {
             autoFocus
             placeholder="Search images and photos"
             onChange={this.handleNameChange}
+            value={this.state.imageName}
           ></SearchFormInput>
         </SearchForm>
       </SearchbarHeader>

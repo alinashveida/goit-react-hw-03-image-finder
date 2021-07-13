@@ -1,21 +1,18 @@
 import { ImageGalleryList } from './ImageGallery.styled'
 import ImageGalleryItem from '../ImageGalleryItem/ImageGalleryItem'
 
-export default function ImageGallery({ images }) {
+export default function ImageGallery({ images, imageName, onImageClick }) {
   return (
     <ImageGalleryList>
       {images.map((image) => (
-        <ImageGalleryItem key={image.id} src={image.webformatURL} />
+        <ImageGalleryItem
+          key={image.id}
+          src={image.webformatURL}
+          imageName={imageName}
+          onImageClick={onImageClick}
+          largeImageURL={image.largeImageURL}
+        />
       ))}
     </ImageGalleryList>
   )
 }
-
-// {friends.map((friend) => (
-//   <FriendListItem
-//     key={friend.id}
-//     avatar={friend.avatar}
-//     name={friend.name}
-//     isOnline={friend.isOnline}
-//   />
-// ))}
