@@ -52,6 +52,16 @@ export default class ImagesInfo extends Component {
     this.setState((prevState) => {
       return { page: prevState.page + 1 }
     })
+    this.scrollToEnd()
+  }
+
+  scrollToEnd = () => {
+    setTimeout(() => {
+      window.scrollBy({
+        top: document.documentElement.scrollHeight,
+        behavior: 'smooth',
+      })
+    }, 1000)
   }
 
   resetPage = () => {
@@ -85,7 +95,10 @@ export default class ImagesInfo extends Component {
             imageName={imageName}
             onImageClick={onImageClick}
           />
-          <Button onClick={this.onButtonLoadMore}></Button>
+
+          {image.length > 0 && (
+            <Button onClick={this.onButtonLoadMore}></Button>
+          )}
         </>
       )
     }
