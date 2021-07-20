@@ -4,6 +4,12 @@ import ImagesInfo from '../ImagesInfo/ImagesInfo'
 import { Container, ModalImg } from './App.styled'
 import Modal from '../Modal/Modal'
 
+import React from 'react'
+
+export default function App() {
+  return <div></div>
+}
+
 export default class App extends Component {
   state = {
     imageName: '',
