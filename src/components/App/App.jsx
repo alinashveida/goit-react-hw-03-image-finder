@@ -1,42 +1,34 @@
-import React, { Component } from 'react'
+import React, { useState } from 'react'
 import Searchbar from '../Searchbar/Searchbar'
 import ImagesInfo from '../ImagesInfo/ImagesInfo'
 import { Container, ModalImg } from './App.styled'
 import Modal from '../Modal/Modal'
 
-export default class App extends Component {
-  state = {
-    imageName: '',
-    showModal: false,
-    largeImageURL: '',
+export default function App() {
+  const [imageName, setImageName] = useState('')
+  const [showModal, setShowModal] = useState(false)
+  const [largeImageURL, setLargeImageURL] = useState('')
+
+  const toggleModal = (largeImageURL) => {
+    setShowModal(!showModal)
+    setLargeImageURL(largeImageURL || '')
   }
 
-  toggleModal = (largeImageURL) => {
-    this.setState(({ showModal }) => ({
-      showModal: !showModal,
-      largeImageURL: largeImageURL,
-    }))
-  }
+  const onSubmit = (imageName) => {
+    setImageName(imageName)
 
-  onSubmit = (imageName) => {
-    this.setState({ imageName })
     console.log(imageName)
   }
 
-  render() {
-    return (
-      <Container>
-        <Searchbar onSubmit={this.onSubmit}></Searchbar>
-        <ImagesInfo
-          imageName={this.state.imageName}
-          onImageClick={this.toggleModal}
-        ></ImagesInfo>
-        {this.state.showModal && (
-          <Modal onClose={this.toggleModal}>
-            <ModalImg src={this.state.largeImageURL}></ModalImg>
-          </Modal>
-        )}
-      </Container>
-    )
-  }
+  return (
+    <Container>
+      <Searchbar onSubmit={onSubmit}></Searchbar>
+      <ImagesInfo imageName={imageName} onImageClick={toggleModal}></ImagesInfo>
+      {showModal && (
+        <Modal onClose={toggleModal}>
+          <ModalImg src={largeImageURL}></ModalImg>
+        </Modal>
+      )}
+    </Container>
+  )
 }

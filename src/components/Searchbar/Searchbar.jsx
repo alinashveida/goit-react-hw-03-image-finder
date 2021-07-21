@@ -5,52 +5,46 @@ import {
   SearchFormButtonLabel,
   SearchFormInput,
 } from './Searchbar.styled'
-import React, { Component } from 'react'
+import React, { useState } from 'react'
 import { onError } from '../../NotifyError'
 
-export default class Searchbar extends Component {
-  state = {
-    imageName: '',
-  }
+export default function Searchbar({ onSubmit }) {
+  const [imageName, setImageName] = useState('')
 
-  handleNameChange = (event) => {
+  const handleNameChange = (event) => {
     const value = event.currentTarget.value
-    this.setState({
-      imageName: value.toLowerCase(),
-    })
+    setImageName(value.toLowerCase())
   }
 
-  handleSubmit = (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault()
 
-    if (this.state.imageName.trim() === '') {
+    if (imageName.trim() === '') {
       console.log('Ведите имя покемона')
       onError('Введите текст')
       return
     }
 
-    this.props.onSubmit(this.state.imageName)
-    this.setState({ imageName: '' })
+    onSubmit(imageName)
+    setImageName('')
   }
 
-  render() {
-    return (
-      <SearchbarHeader>
-        <SearchForm onSubmit={this.handleSubmit}>
-          <SearchFormButton type="submit">
-            <SearchFormButtonLabel></SearchFormButtonLabel>
-          </SearchFormButton>
+  return (
+    <SearchbarHeader>
+      <SearchForm onSubmit={handleSubmit}>
+        <SearchFormButton type="submit">
+          <SearchFormButtonLabel></SearchFormButtonLabel>
+        </SearchFormButton>
 
-          <SearchFormInput
-            type="text"
-            autocomplete="off"
-            autoFocus
-            placeholder="Search images and photos"
-            onChange={this.handleNameChange}
-            value={this.state.imageName}
-          ></SearchFormInput>
-        </SearchForm>
-      </SearchbarHeader>
-    )
-  }
+        <SearchFormInput
+          type="text"
+          autocomplete="off"
+          autoFocus
+          placeholder="Search images and photos"
+          onChange={handleNameChange}
+          value={imageName}
+        ></SearchFormInput>
+      </SearchForm>
+    </SearchbarHeader>
+  )
 }
